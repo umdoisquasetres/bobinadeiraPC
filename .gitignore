@@ -361,3 +361,31 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Arduino
+*.ino.hex
+*.elf
+*.eep
+*.bin
+*.obj
+*.o
+*.d
+*.lst
+*.map
+*.lss
+*.sym
+build/
+*.tmp
+*~
+*.bak
+*.log
+*#
+*##
+local/
+private/
+*DS_Store
+._*
+Thumbs.db
+/bobinadeira_PC_V4.2/
+/bobinadeira_PC_V4.3/
+/bobinadeira_PC_V4.1.ino

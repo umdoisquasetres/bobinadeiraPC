@@ -17,6 +17,11 @@ namespace bobinadeiraPC
         public const string StopWinding = "CMD:STOP\n";
 
         /// <summary>
+        /// Comando para resetar a contagem de voltas no microcontrolador.
+        /// </summary>
+        public const string ResetWinding = "CMD:RESET\n";
+
+        /// <summary>
         /// Formato do comando de configuração.
         /// Use com string.Format(ConfigFormat, espiras, rpm, diametro).
         /// Ex: CFG:E100;R800;D0.50

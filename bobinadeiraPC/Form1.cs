@@ -16,6 +16,7 @@ namespace bobinadeiraPC
         private readonly FileLogger _logger = FileLogger.Instance;
         private int _voltasContador = 0;
         private bool _alarmeAtivado = false;
+        private bool _prontoParaResetar = false;
 
         // ==========================================
         // 2. Inicialização (Construtor)
@@ -106,18 +107,39 @@ namespace bobinadeiraPC
 
         private async void btnIniciar_Click(object sender, EventArgs e)
         {
-            ResetContadorEAlarme(); // Reset antes de iniciar um novo ciclo
+            // Garante que o estado de "Resetar" seja desfeito ao iniciar
+            _prontoParaResetar = false;
+            btnParar.Text = "Parar";
+
+            // 1. Reseta o contador no App e no Arduino
+            ResetContadorEAlarme();
+            await EnviarComandoComSeguranca(CommandConstants.ResetWinding);
+
+            // 2. Inicia o processo
             if (await EnviarComandoComSeguranca(CommandConstants.StartWinding))
             {
-                AtualizarStatusVisual("Status: Bobinando...");
+                AtualizarStatusVisual("Bobinando...");
             }
         }
 
         private async void btnParar_Click(object sender, EventArgs e)
         {
-            if (await EnviarComandoComSeguranca(CommandConstants.StopWinding))
+            if (_prontoParaResetar)
             {
-                AtualizarStatusVisual("Status: Parado pelo usuário");
+                await EnviarComandoComSeguranca(CommandConstants.ResetWinding);
+                ResetContadorEAlarme();
+                _prontoParaResetar = false;
+                btnParar.Text = "Parar";
+                AtualizarStatusVisual("Pronto");
+            }
+            else
+            {
+                if (await EnviarComandoComSeguranca(CommandConstants.StopWinding))
+                {
+                    AtualizarStatusVisual("Parado pelo usuário");
+                    _prontoParaResetar = true;
+                    btnParar.Text = "Resetar";
+                }
             }
         }
 
@@ -169,17 +191,18 @@ namespace bobinadeiraPC
 
         private void AtualizarStatusVisual(string mensagem)
         {
-            label10.Text = mensagem;
+            lblStatus.Text = mensagem;
         }
 
         private void ResetContadorEAlarme()
         {
             _voltasContador = 0;
             _alarmeAtivado = false;
-            lblVoltasAtual.Text = "Voltas Atuais: 0";
-            lblAlarme.Text = "";
-            lblAlarme.Visible = false;
-            lblAlarme.ForeColor = Color.Red; // Garante a cor padrão de alerta
+            lblVoltasAtual.Text = "0";
+            lblProgressStatus.Text = "0%";
+            lblAlarms.Text = "";
+            lblAlarms.Visible = false;
+            lblAlarms.ForeColor = Color.Red; // Garante a cor padrão de alerta
             progressBar1.Value = 0;
             _logger.Log("Contador de voltas e alarme resetados.");
         }
@@ -213,34 +236,60 @@ namespace bobinadeiraPC
             }
 
             string dadosRecebidos = data.Trim();
-            label13.Text = dadosRecebidos; // Continua mostrando o dado bruto para depuração
 
-            // Verifica se é o comando de Contagem de Voltas (CNT:1)
-            if (dadosRecebidos.StartsWith("CNT:", StringComparison.Ordinal))
+            if (dadosRecebidos.StartsWith("STATUS:", StringComparison.Ordinal))
             {
-                _voltasContador++;
-                lblVoltasAtual.Text = $"Voltas Atuais: {_voltasContador}";
-                _logger.Log($"Volta detectada. Total: {_voltasContador}");
-
-                // Calcula e atualiza o progresso
-                decimal totalEspiras = numEspiras.Value;
-                if (totalEspiras > 0)
+                string statusMsg = dadosRecebidos.Substring(7);
+                if (statusMsg.StartsWith("Voltas Reais: ", StringComparison.Ordinal))
                 {
-                    int progresso = (int)((_voltasContador / totalEspiras) * 100);
-                    progressBar1.Value = Math.Clamp(progresso, 0, 100);
+                    string voltasStr = statusMsg.Substring(14);
+                    if (int.TryParse(voltasStr, out int voltas))
+                    {
+                        _voltasContador = voltas;
+                        lblVoltasAtual.Text = $"{_voltasContador}";
+                        _logger.Log($"Voltas recebidas: {_voltasContador}");
+
+                        // Verifica condição de alarme (voltas excedidas)
+                        decimal totalEspiras = numEspiras.Value;
+                        if (_voltasContador > totalEspiras && !_alarmeAtivado)
+                        {
+                            _alarmeAtivado = true;
+                            lblAlarms.Text = "ALERTA: Voltas excedidas!";
+                            lblAlarms.Visible = true;
+                            _logger.LogError($"ALERTA: Voltas excedidas! Voltas: {_voltasContador}, Esperado: {totalEspiras}");
+                        }
+                    }
                 }
                 else
                 {
-                    progressBar1.Value = 0; // Se o total de espiras for 0, o progresso é 0
-                }
+                    // Filtra mensagens de status que não devem ser mostradas diretamente
+                    if (statusMsg == "RESETADO" || statusMsg == "INICIADO")
+                    {
+                        // Ignora esses status intermediários para uma UI mais limpa
+                    }
+                    else if (statusMsg == "Config Recebida")
+                    {
+                        AtualizarStatusVisual("Configuração recebida");
+                    }
+                    else
+                    {
+                        AtualizarStatusVisual(statusMsg);
+                    }
 
-                // Verifica condição de alarme (voltas excedidas)
-                if (_voltasContador > totalEspiras && !_alarmeAtivado)
+                    if (statusMsg == "CONCLUIDO")
+                    {
+                        _prontoParaResetar = true;
+                        btnParar.Text = "Resetar";
+                    }
+                }
+            }
+            else if (dadosRecebidos.StartsWith("PROG:", StringComparison.Ordinal))
+            {
+                string progStr = dadosRecebidos.Substring(5);
+                if (int.TryParse(progStr, out int progresso))
                 {
-                    _alarmeAtivado = true;
-                    lblAlarme.Text = "ALERTA: Voltas excedidas!";
-                    lblAlarme.Visible = true;
-                    _logger.LogError($"ALERTA: Voltas excedidas! Voltas: {_voltasContador}, Esperado: {totalEspiras}");
+                    progressBar1.Value = Math.Clamp(progresso, 0, 100);
+                    lblProgressStatus.Text = $"{progresso}%";
                 }
             }
         }
