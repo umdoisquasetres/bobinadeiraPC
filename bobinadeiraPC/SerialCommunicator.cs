@@ -10,8 +10,8 @@ public class SerialCommunicator : IDisposable
     private readonly SerialPort _serialPort;
     private readonly FileLogger _logger = FileLogger.Instance;
 
-    public event EventHandler<string> DataReceived;
-    public event EventHandler<bool> ConnectionStatusChanged;
+    public event EventHandler<string>? DataReceived;
+    public event EventHandler<bool>? ConnectionStatusChanged;
 
     public bool IsConnected => _serialPort.IsOpen;
 

@@ -29,7 +29,7 @@ namespace bobinadeiraPC
             }
         }
 
-        public void LogError(string message, Exception ex = null)
+        public void LogError(string message, Exception? ex = null)
         {
             string errorMessage = $"ERRO: {message}";
             if (ex != null)
