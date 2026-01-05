@@ -12,7 +12,7 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        ///  Required method for Designer support - do not modify
+        ///  Required method for Designer for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -46,6 +46,9 @@
             progressBar1 = new ProgressBar();
             label10 = new Label();
             label9 = new Label();
+            lblVoltasAtual = new Label();
+            lblAlarme = new Label();
+            label12 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numRPM).BeginInit();
@@ -204,6 +207,9 @@
             // 
             resources.ApplyResources(panel4, "panel4");
             panel4.BorderStyle = BorderStyle.FixedSingle;
+            panel4.Controls.Add(label12);
+            panel4.Controls.Add(lblAlarme);
+            panel4.Controls.Add(lblVoltasAtual);
             panel4.Controls.Add(label13);
             panel4.Controls.Add(label11);
             panel4.Controls.Add(progressBar1);
@@ -235,6 +241,23 @@
             // 
             resources.ApplyResources(label9, "label9");
             label9.Name = "label9";
+            // 
+            // lblVoltasAtual
+            // 
+            resources.ApplyResources(lblVoltasAtual, "lblVoltasAtual");
+            lblVoltasAtual.ForeColor = System.Drawing.Color.Blue;
+            lblVoltasAtual.Name = "lblVoltasAtual";
+            // 
+            // lblAlarme
+            // 
+            resources.ApplyResources(lblAlarme, "lblAlarme");
+            lblAlarme.ForeColor = System.Drawing.Color.Red;
+            lblAlarme.Name = "lblAlarme";
+            // 
+            // label12
+            // 
+            resources.ApplyResources(label12, "label12");
+            label12.Name = "label12";
             // 
             // Form1
             // 
@@ -298,5 +321,8 @@
         private Label label10;
         private Label label9;
         private Label label13;
+        private Label lblVoltasAtual;
+        private Label lblAlarme;
+        private Label label12;
     }
 }
