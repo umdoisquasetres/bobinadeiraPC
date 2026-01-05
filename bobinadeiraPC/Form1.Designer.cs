@@ -7,18 +7,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+
 
         #region Windows Form Designer generated code
 
@@ -32,7 +21,7 @@
             cboPortas = new ComboBox();
             label1 = new Label();
             btnConectar = new Button();
-            button2 = new Button();
+            btnAtualizarPortas = new Button();
             panel1 = new Panel();
             label7 = new Label();
             label2 = new Label();
@@ -52,12 +41,11 @@
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             label8 = new Label();
             panel4 = new Panel();
-            label9 = new Label();
-            label10 = new Label();
-            progressBar1 = new ProgressBar();
-            label11 = new Label();
-            label12 = new Label();
             label13 = new Label();
+            label11 = new Label();
+            progressBar1 = new ProgressBar();
+            label10 = new Label();
+            label9 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numRPM).BeginInit();
@@ -73,33 +61,32 @@
             resources.ApplyResources(cboPortas, "cboPortas");
             cboPortas.FormattingEnabled = true;
             cboPortas.Name = "cboPortas";
-            cboPortas.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // label1
             // 
             resources.ApplyResources(label1, "label1");
             label1.Name = "label1";
-            label1.Click += label1_Click;
             // 
             // btnConectar
             // 
             resources.ApplyResources(btnConectar, "btnConectar");
             btnConectar.Name = "btnConectar";
             btnConectar.UseVisualStyleBackColor = true;
+            btnConectar.Click += btnConectar_Click;
             // 
-            // button2
+            // btnAtualizarPortas
             // 
-            resources.ApplyResources(button2, "button2");
-            button2.Name = "button2";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            resources.ApplyResources(btnAtualizarPortas, "btnAtualizarPortas");
+            btnAtualizarPortas.Name = "btnAtualizarPortas";
+            btnAtualizarPortas.UseVisualStyleBackColor = true;
+            btnAtualizarPortas.Click += btnAtualizarPortas_Click;
             // 
             // panel1
             // 
             resources.ApplyResources(panel1, "panel1");
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(label7);
-            panel1.Controls.Add(button2);
+            panel1.Controls.Add(btnAtualizarPortas);
             panel1.Controls.Add(cboPortas);
             panel1.Controls.Add(btnConectar);
             panel1.Name = "panel1";
@@ -113,7 +100,6 @@
             // 
             resources.ApplyResources(label2, "label2");
             label2.Name = "label2";
-            label2.Click += label2_Click;
             // 
             // panel2
             // 
@@ -167,18 +153,21 @@
             resources.ApplyResources(btnEnviarConfig, "btnEnviarConfig");
             btnEnviarConfig.Name = "btnEnviarConfig";
             btnEnviarConfig.UseVisualStyleBackColor = true;
+            btnEnviarConfig.Click += btnEnviarConfig_Click;
             // 
             // btnIniciar
             // 
             resources.ApplyResources(btnIniciar, "btnIniciar");
             btnIniciar.Name = "btnIniciar";
             btnIniciar.UseVisualStyleBackColor = true;
+            btnIniciar.Click += btnIniciar_Click;
             // 
             // btnParar
             // 
             resources.ApplyResources(btnParar, "btnParar");
             btnParar.Name = "btnParar";
             btnParar.UseVisualStyleBackColor = true;
+            btnParar.Click += btnParar_Click;
             // 
             // label6
             // 
@@ -210,49 +199,42 @@
             // 
             resources.ApplyResources(label8, "label8");
             label8.Name = "label8";
-            label8.Click += label8_Click;
             // 
             // panel4
             // 
             resources.ApplyResources(panel4, "panel4");
             panel4.BorderStyle = BorderStyle.FixedSingle;
             panel4.Controls.Add(label13);
-            panel4.Controls.Add(label12);
             panel4.Controls.Add(label11);
             panel4.Controls.Add(progressBar1);
             panel4.Controls.Add(label10);
             panel4.Controls.Add(label9);
             panel4.Name = "panel4";
             // 
-            // label9
+            // label13
             // 
-            resources.ApplyResources(label9, "label9");
-            label9.Name = "label9";
-            // 
-            // label10
-            // 
-            resources.ApplyResources(label10, "label10");
-            label10.Name = "label10";
-            // 
-            // progressBar1
-            // 
-            resources.ApplyResources(progressBar1, "progressBar1");
-            progressBar1.Name = "progressBar1";
+            resources.ApplyResources(label13, "label13");
+            label13.Name = "label13";
             // 
             // label11
             // 
             resources.ApplyResources(label11, "label11");
             label11.Name = "label11";
             // 
-            // label12
+            // progressBar1
             // 
-            resources.ApplyResources(label12, "label12");
-            label12.Name = "label12";
+            resources.ApplyResources(progressBar1, "progressBar1");
+            progressBar1.Name = "progressBar1";
             // 
-            // label13
+            // label10
             // 
-            resources.ApplyResources(label13, "label13");
-            label13.Name = "label13";
+            resources.ApplyResources(label10, "label10");
+            label10.Name = "label10";
+            // 
+            // label9
+            // 
+            resources.ApplyResources(label9, "label9");
+            label9.Name = "label9";
             // 
             // Form1
             // 
@@ -291,7 +273,7 @@
         private ComboBox cboPortas;
         private Label label1;
         private Button btnConectar;
-        private Button button2;
+        private Button btnAtualizarPortas;
         private Panel panel1;
         private Label label2;
         private Panel panel2;
@@ -316,6 +298,5 @@
         private Label label10;
         private Label label9;
         private Label label13;
-        private Label label12;
     }
 }
